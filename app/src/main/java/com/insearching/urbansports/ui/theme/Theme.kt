@@ -1,4 +1,4 @@
-package com.insearching.urbansportschallenage.ui.theme
+package com.insearching.urbansports.ui.theme
 
 import android.app.Activity
 import android.os.Build

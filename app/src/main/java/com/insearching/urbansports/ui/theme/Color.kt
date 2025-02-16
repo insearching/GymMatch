@@ -1,4 +1,4 @@
-package com.insearching.urbansportschallenage.ui.theme
+package com.insearching.urbansports.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
