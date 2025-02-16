@@ -29,9 +29,9 @@ object LocationUtils {
         startLng: Double,
         endLat: Double,
         endLng: Double
-    ): Float {
+    ): Double {
         val results = FloatArray(1)
         Location.distanceBetween(startLat, startLng, endLat, endLng, results)
-        return results[0]
+        return results[0].toDouble()
     }
 }

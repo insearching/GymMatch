@@ -4,17 +4,28 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Geocoder
-import android.location.Location
+import android.os.Looper
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.Priority
 import com.insearching.urbansports.core.domain.util.DataError
 import com.insearching.urbansports.core.domain.util.Result
+import com.insearching.urbansports.core.util.LocationUtils
 import com.insearching.urbansports.gyms.domain.LocationManager
 import com.insearching.urbansports.gyms.domain.model.GeoPoint
+import com.insearching.urbansports.gyms.domain.model.toGeoPoint
+import com.insearching.urbansports.gyms.utils.Constants
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
+import kotlin.time.Duration.Companion.seconds
 
 @Suppress("DEPRECATION")
 class DefaultLocationManager(
@@ -23,22 +34,39 @@ class DefaultLocationManager(
     private val geocoder: Geocoder,
 ) : LocationManager {
 
-    override suspend fun getCurrentLocation(): Result<GeoPoint, DataError.Local> {
-        return suspendCancellableCoroutine { continuation ->
+    private val locationRequest = LocationRequest.Builder(
+        Priority.PRIORITY_HIGH_ACCURACY,
+        Constants.LOCATION_UPDATE_SECONDS.seconds.inWholeMilliseconds
+    ).build()
+
+
+    override suspend fun getCurrentLocation(): Flow<Result<GeoPoint, DataError.Local>> {
+        return callbackFlow {
+            val locationListener = object : LocationCallback() {
+                override fun onLocationResult(locationResult: LocationResult) {
+                    val lastLocation = locationResult.lastLocation
+                    if (lastLocation != null) {
+                        trySend(Result.Success(lastLocation.toGeoPoint()))
+                    } else {
+                        trySend(Result.Error(DataError.Local.GPS_DISABLED))
+                    }
+                }
+            }
             if (ActivityCompat.checkSelfPermission(
                     context,
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
-                locationClient.lastLocation.addOnSuccessListener { location ->
-                    if (location != null) {
-                        continuation.resume(Result.Success(location.toGeoPoint()))
-                    } else {
-                        continuation.resume(Result.Error(DataError.Local.GPS_DISABLED))
-                    }
-                }
+                locationClient.requestLocationUpdates(
+                    locationRequest,
+                    locationListener,
+                    Looper.getMainLooper()
+                )
             } else {
-                continuation.resume(Result.Error(DataError.Local.PERMISSION_REQUIRED))
+                trySend(Result.Error(DataError.Local.PERMISSION_REQUIRED))
+            }
+            awaitClose {
+                locationClient.removeLocationUpdates(locationListener) // Unregister listener on cancellation
             }
         }
     }
@@ -56,11 +84,14 @@ class DefaultLocationManager(
             }
         }
     }
-}
 
-fun Location.toGeoPoint(): GeoPoint {
-    return GeoPoint(
-        latitude = latitude,
-        longitude = longitude
-    )
+    // TODO: Refactor logic to get more precise distance based on maps
+    override fun getDistanceBetweenPoints(startLocation: GeoPoint, endLocation: GeoPoint): Double {
+        return LocationUtils.calculateDistance(
+            startLat = startLocation.latitude,
+            startLng = startLocation.longitude,
+            endLat = endLocation.latitude,
+            endLng = endLocation.longitude
+        )
+    }
 }

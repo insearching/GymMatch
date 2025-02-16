@@ -1,7 +1,6 @@
 package com.insearching.urbansports.gyms.presentation.gym_match
 
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.insearching.urbansports.core.domain.util.onError
@@ -12,7 +11,7 @@ import com.insearching.urbansports.gyms.domain.model.GeoPoint
 import com.insearching.urbansports.gyms.domain.usecase.AddGymToFavorites
 import com.insearching.urbansports.gyms.domain.usecase.DislikeGym
 import com.insearching.urbansports.gyms.domain.usecase.FindNearbyGyms
-import com.insearching.urbansports.gyms.domain.usecase.GetCurrentLocation
+import com.insearching.urbansports.gyms.domain.usecase.ObserveCurrentLocation
 import com.insearching.urbansportschallenage.R
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +27,7 @@ import kotlinx.coroutines.launch
 class MatchingScreenViewModel(
     private val addGymToFavorites: AddGymToFavorites,
     private val dislikeGym: DislikeGym,
-    private val getCurrentLocation: GetCurrentLocation,
+    private val observeCurrentLocation: ObserveCurrentLocation,
     private val findNearbyGyms: FindNearbyGyms
 ) : ViewModel() {
 
@@ -52,15 +51,25 @@ class MatchingScreenViewModel(
         }
 
         viewModelScope.launch {
-            getCurrentLocation()
-                .onSuccess {
-                    searchForGyms(it)
-                }
-                .onError { error ->
-                    _state.update {
-                        MatchingScreenState.Error(error.toUiText())
+            observeCurrentLocation()
+                .collectLatest {
+                    it.onSuccess { location ->
+                        searchForGyms(location)
+                    }.onError { error ->
+                        _state.update {
+                            MatchingScreenState.Error(error.toUiText())
+                        }
                     }
                 }
+//                .onSuccess {
+//                    searchForGyms(it)
+//                }
+//                .onError { error ->
+//                    _state.update {
+//                        MatchingScreenState.Error(error.toUiText())
+//                    }
+//                }
+
         }
     }
 

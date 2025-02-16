@@ -13,7 +13,7 @@ import com.insearching.urbansports.gyms.domain.LocationManager
 import com.insearching.urbansports.gyms.domain.usecase.AddGymToFavorites
 import com.insearching.urbansports.gyms.domain.usecase.DislikeGym
 import com.insearching.urbansports.gyms.domain.usecase.FindNearbyGyms
-import com.insearching.urbansports.gyms.domain.usecase.GetCurrentLocation
+import com.insearching.urbansports.gyms.domain.usecase.ObserveCurrentLocation
 import com.insearching.urbansports.gyms.presentation.gym_match.MatchingScreenViewModel
 import io.ktor.client.engine.cio.CIO
 import org.koin.android.ext.koin.androidContext
@@ -33,9 +33,9 @@ val appModule = module {
     single<LocationManager> { DefaultLocationManager(androidContext(), get(), get()) }
 
     single { AddGymToFavorites(get()) }
-    single { GetCurrentLocation(get()) }
+    single { ObserveCurrentLocation(get()) }
     single { DislikeGym(get()) }
-    single { FindNearbyGyms(get()) }
+    single { FindNearbyGyms(get(), get()) }
 
     viewModel { MainViewModel() }
     viewModel { MatchingScreenViewModel(get(), get(), get(), get()) }

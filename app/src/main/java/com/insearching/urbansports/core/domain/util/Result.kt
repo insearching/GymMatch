@@ -35,6 +35,15 @@ fun <T, E: Error> Result<T, E>.getOrDefault(defaultValue: T): T {
     }
 }
 
+fun <T, E: Error> Result<T, E>.errorOrNull(): E? {
+    return when (this) {
+        is Result.Error -> error
+        is Result.Success -> null
+    }
+}
+
+
+
 fun <T, E: Error> Result<T, E>.isSucceeded(): Boolean {
     return this is Result.Success
 }

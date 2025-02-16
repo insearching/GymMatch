@@ -1,4 +1,4 @@
-package com.insearching.urbansportschallenage
+package com.insearching.urbansports
 
 import org.junit.Test
 

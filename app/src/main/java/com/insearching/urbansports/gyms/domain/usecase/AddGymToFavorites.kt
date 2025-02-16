@@ -7,6 +7,15 @@ import com.insearching.urbansports.gyms.domain.GymsRepository
 import com.insearching.urbansports.gyms.domain.model.Gym
 import com.insearching.urbansports.gyms.utils.Constants
 
+/**
+ * Use case for adding a gym to the user's favorites list.
+ *
+ * This class encapsulates the logic for marking a gym as a favorite in the data layer.
+ * It interacts with the [GymsRepository] to update the gym's `isFavorite` status.
+ * It also incorporates a simulated "match" chance when adding a gym to favorites.
+ *
+ * @property gymRepository The repository responsible for managing gym data.
+ */
 class AddGymToFavorites(
     private val gymRepository: GymsRepository
 ) {

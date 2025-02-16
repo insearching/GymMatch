@@ -22,7 +22,11 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"https://data.townofcary.org/api/explore/v2.1/\"")
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                "\"https://data.townofcary.org/api/explore/v2.1/\""
+            )
         }
         release {
             isMinifyEnabled = false
@@ -31,7 +35,11 @@ android {
                 "proguard-rules.pro"
             )
             //replace it with production url when ready
-            buildConfigField("String", "BASE_URL", "\"https://data.townofcary.org/api/explore/v2.1/\"")
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                "\"https://data.townofcary.org/api/explore/v2.1/\""
+            )
         }
     }
     compileOptions {
@@ -46,6 +54,8 @@ android {
         compose = true
     }
 }
+
+
 
 dependencies {
 
@@ -63,17 +73,26 @@ dependencies {
     implementation(libs.android.maps.utils)
     implementation(libs.androidx.navigation.compose)
 
-    implementation (libs.compose.swipeable.cards)
+    implementation(libs.compose.swipeable.cards)
 
     implementation(libs.room.ktx)
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
 
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.junit.jupiter)
+    testImplementation (libs.turbine)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
