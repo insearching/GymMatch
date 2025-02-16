@@ -7,8 +7,7 @@ import com.insearching.urbansports.core.domain.util.Result
 import com.insearching.urbansports.core.domain.util.map
 import com.insearching.urbansports.core.domain.util.onSuccess
 import com.insearching.urbansports.gyms.data.database.GymDao
-import com.insearching.urbansports.gyms.data.database.toEntity
-import com.insearching.urbansports.gyms.data.database.toGym
+import com.insearching.urbansports.gyms.data.mapper.toEntity
 import com.insearching.urbansports.gyms.data.mapper.toGym
 import com.insearching.urbansports.gyms.data.networking.RemoteGymDataSource
 import com.insearching.urbansports.gyms.domain.GymsRepository
