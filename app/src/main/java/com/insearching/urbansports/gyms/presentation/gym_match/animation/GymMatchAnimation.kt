@@ -26,7 +26,7 @@ import com.insearching.urbansportschallenage.R
 @Composable
 fun GymMatchAnimation(
     isVisible: Boolean,
-    durationMillis: Int = 3000, // Extended to 3 seconds
+    durationMillis: Int = 2000, // Extended to 3 seconds
     onAnimationEnd: () -> Unit = {}
 ) {
     val scale by animateFloatAsState(

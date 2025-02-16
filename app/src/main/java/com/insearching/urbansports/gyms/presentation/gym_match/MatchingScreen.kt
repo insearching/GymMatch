@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,7 +28,6 @@ import com.spartapps.swipeablecards.state.rememberSwipeableCardsState
 import com.spartapps.swipeablecards.ui.SwipeableCardDirection
 import com.spartapps.swipeablecards.ui.SwipeableCards
 import com.spartapps.swipeablecards.ui.SwipeableCardsProperties
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -111,6 +109,7 @@ fun MatchingScreenLoading(
             CircularProgressIndicator()
             Text(
                 stringResource(R.string.loading),
+                style = MaterialTheme.typography.displayMedium,
             )
         }
     }
@@ -133,7 +132,7 @@ fun MatchingScreenContent(
 
         Text(
             text = stringResource(R.string.no_more_gyms_nearby),
-            style = MaterialTheme.typography.displayLarge,
+            style = MaterialTheme.typography.displayMedium,
         )
 
         val gyms = remember { state.data }
@@ -141,8 +140,6 @@ fun MatchingScreenContent(
             initialCardIndex = 0,
             itemCount = { gyms.size }
         )
-
-        val scope = rememberCoroutineScope()
 
         SwipeableCards(
             items = gyms,
@@ -159,13 +156,17 @@ fun MatchingScreenContent(
             onSwipe = { gym, direction ->
                 when (direction) {
                     SwipeableCardDirection.Right -> {
-                        scope.launch {
-                            onAction(MatchingScreenAction.OnGymLiked(gym))
-                        }
+                        onAction(MatchingScreenAction.OnGymLiked(gym))
                     }
 
                     SwipeableCardDirection.Left -> {
                         onAction(MatchingScreenAction.OnGymDisliked(gym))
+                    }
+                }
+
+                if (swipeableCardsState.currentCardIndex == gyms.lastIndex) {
+                    while (swipeableCardsState.currentCardIndex > 0) {
+                        swipeableCardsState.goBack()
                     }
                 }
             }
@@ -177,8 +178,12 @@ fun MatchingScreenContent(
                     when (it) {
                         is MatchingScreenAction.OnGymLiked,
                         is MatchingScreenAction.OnGymDisliked -> {
-                            scope.launch {
-                                swipeableCardsState.moveNext()
+                            swipeableCardsState.moveNext()
+
+                            if (swipeableCardsState.currentCardIndex == gyms.lastIndex) {
+                                while (swipeableCardsState.currentCardIndex > 0) {
+                                    swipeableCardsState.goBack()
+                                }
                             }
                         }
 
@@ -190,6 +195,7 @@ fun MatchingScreenContent(
                 }
             )
         }
+
         GymMatchAnimation(
             isVisible = animationVisible,
             onAnimationEnd = onAnimationEnd
@@ -210,6 +216,7 @@ fun MatchingScreenError(
         Text(
             modifier = modifier,
             text = state.message.asString(),
+            style = MaterialTheme.typography.displayMedium,
         )
     }
 }
