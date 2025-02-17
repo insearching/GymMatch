@@ -53,6 +53,16 @@ class DefaultLocationManager(
             }
 
             if (context.hasLocationPermissions()) {
+                //get current location in case location updates will take too long to complete
+                locationClient.getCurrentLocation(
+                    Priority.PRIORITY_HIGH_ACCURACY,
+                    null
+                ).addOnSuccessListener { location ->
+                    location?.let {
+                        trySend(Result.Success(it.toGeoPoint()))
+                    }
+                }
+
                 locationClient.requestLocationUpdates(
                     locationRequest,
                     locationListener,
