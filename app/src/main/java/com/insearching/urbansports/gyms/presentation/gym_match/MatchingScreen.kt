@@ -2,10 +2,9 @@ package com.insearching.urbansports.gyms.presentation.gym_match
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,15 +15,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.insearching.urbansports.R
+import com.insearching.urbansports.core.presentation.animation.BlurredAnimatedText
+import com.insearching.urbansports.core.presentation.animation.PulseAnimation
 import com.insearching.urbansports.core.presentation.util.UiText
 import com.insearching.urbansports.core.util.ObserveAsEvents
 import com.insearching.urbansports.gyms.domain.model.Gym
 import com.insearching.urbansports.gyms.presentation.gym_match.animation.GymMatchAnimation
+import com.insearching.urbansports.ui.theme.UrbanSportsTheme
 import com.spartapps.swipeablecards.state.rememberSwipeableCardsState
 import com.spartapps.swipeablecards.ui.SwipeableCardDirection
 import com.spartapps.swipeablecards.ui.SwipeableCards
@@ -109,14 +112,14 @@ fun MatchingScreenLoading(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CircularProgressIndicator()
-            Text(
-                stringResource(R.string.loading),
-                style = MaterialTheme.typography.displayMedium,
+            PulseAnimation()
+            BlurredAnimatedText(
+                modifier = Modifier.testTag("Loading…"),
+                text = stringResource(R.string.loading),
             )
         }
     }
@@ -225,54 +228,60 @@ fun MatchingScreenError(
 @Preview
 @Composable
 fun MatchingScreenSuccessPreview() {
-    val state = MatchingScreenState.Success(
-        data = listOf(
-            Gym(
-                openGymStart = "2016-11-02T17:00:00+00:00",
-                openGymEnd = "2016-11-02T19:00:00+00:00",
-                totalFemales = 2,
-                totalMales = 1,
-                totalNonResidents = 1,
-                totalResidents = 2,
-                total = 3,
-                facilityTitle = "Cary Arts Center",
-                location = "Principals Hall",
-                address = "101 Dry AVE",
-                provinceCode = "NC",
-                postalCode = "27511",
-                passType = "Open Studio Programs",
-                communityCenter = "CAC",
-                openGym = "Open Studio",
-                group = null,
-                distance = null
+    UrbanSportsTheme {
+        val state = MatchingScreenState.Success(
+            data = listOf(
+                Gym(
+                    openGymStart = "2016-11-02T17:00:00+00:00",
+                    openGymEnd = "2016-11-02T19:00:00+00:00",
+                    totalFemales = 2,
+                    totalMales = 1,
+                    totalNonResidents = 1,
+                    totalResidents = 2,
+                    total = 3,
+                    facilityTitle = "Cary Arts Center",
+                    location = "Principals Hall",
+                    address = "101 Dry AVE",
+                    provinceCode = "NC",
+                    postalCode = "27511",
+                    passType = "Open Studio Programs",
+                    communityCenter = "CAC",
+                    openGym = "Open Studio",
+                    group = null,
+                    distance = null
+                )
             )
         )
-    )
-    MatchingScreen(
-        state = state,
-        animationVisible = false,
-        isPermissionGranted = true
-    )
+        MatchingScreen(
+            state = state,
+            animationVisible = false,
+            isPermissionGranted = true
+        )
+    }
 }
 
 @Preview
 @Composable
 fun MatchingScreenLoadingPreview() {
-    val state = MatchingScreenState.Loading
-    MatchingScreen(
-        state = state,
-        animationVisible = false,
-        isPermissionGranted = true
-    )
+    UrbanSportsTheme {
+        val state = MatchingScreenState.Loading
+        MatchingScreen(
+            state = state,
+            animationVisible = false,
+            isPermissionGranted = true
+        )
+    }
 }
 
 @Preview
 @Composable
 fun MatchingScreenErrorPreview() {
-    val state = MatchingScreenState.Error(UiText.DynamicString("No gyms found"))
-    MatchingScreen(
-        state = state,
-        animationVisible = false,
-        isPermissionGranted = true
-    )
+    UrbanSportsTheme {
+        val state = MatchingScreenState.Error(UiText.DynamicString("No gyms found"))
+        MatchingScreen(
+            state = state,
+            animationVisible = false,
+            isPermissionGranted = true
+        )
+    }
 }

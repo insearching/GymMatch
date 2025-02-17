@@ -39,11 +39,7 @@ fun PermissionDialog(
         confirmButton = {
             TextButton(onClick = {
                 showDialog = false
-                if (!isPermanentlyDeclined) {
-                    onGoToAppSettingsClick()
-                } else {
-                    onOkClick()
-                }
+                onGoToAppSettingsClick()
             }) {
                 Text(text = stringResource(if (isPermanentlyDeclined) R.string.ok else R.string.open_settings))
             }

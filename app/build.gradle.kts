@@ -101,7 +101,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.mockk)
     androidTestImplementation(libs.junit.jupiter)
-    androidTestImplementation("io.mockk:mockk-android:1.13.5")
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)

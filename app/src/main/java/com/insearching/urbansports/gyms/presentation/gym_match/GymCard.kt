@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material.icons.filled.Woman2
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -45,9 +46,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.insearching.urbansports.R
 import com.insearching.urbansports.core.util.DateUtils.formatTime
 import com.insearching.urbansports.gyms.domain.model.Gym
-import com.insearching.urbansports.R
+import com.insearching.urbansports.ui.theme.UrbanSportsTheme
 import java.util.Locale
 
 @Composable
@@ -56,7 +58,7 @@ fun GymCard(
     gym: Gym,
     onAction: (MatchingScreenAction) -> Unit
 ) {
-    val contentColor = MaterialTheme.colorScheme.primary
+    val contentColor = MaterialTheme.colorScheme.onSurface
     val backgrounds = arrayOf(
         R.drawable.pexels_1552248,
         R.drawable.pexels_2652236,
@@ -96,23 +98,21 @@ fun GymCard(
                 Column {
                     Text(
                         text = gym.location,
-                        style = MaterialTheme.typography.titleLarge.copy(
-                            fontWeight = FontWeight.Bold
-                        ),
+                        style = MaterialTheme.typography.headlineLarge,
                         color = contentColor,
                         textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = gym.facilityTitle,
-                        style = MaterialTheme.typography.titleSmall,
+                        style = MaterialTheme.typography.headlineMedium,
                         color = contentColor,
                         textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = gym.getFormattedAddress(),
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.bodyMedium,
                         color = contentColor,
                         textAlign = TextAlign.Center
                     )
@@ -132,11 +132,14 @@ fun GymCard(
                         Text(
                             text = gym.openGym,
                             color = contentColor,
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.Bold
+                            ),
                         )
                         Text(
                             text = gym.communityCenter,
-                            color = contentColor
+                            color = contentColor,
+                            style = MaterialTheme.typography.labelMedium,
                         )
                     }
                     VerticalDivider(
@@ -148,11 +151,14 @@ fun GymCard(
                         Text(
                             text = gym.passType,
                             color = contentColor,
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.Bold
+                            ),
                         )
                         Text(
                             text = gym.group ?: "",
-                            color = contentColor
+                            color = contentColor,
+                            style = MaterialTheme.typography.labelMedium,
                         )
                     }
                 }
@@ -170,7 +176,9 @@ fun GymCard(
                     ) {
                         Text(
                             text = stringResource(R.string.gym_hours),
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.Bold
+                            ),
                             color = contentColor,
                             textAlign = TextAlign.Center
                         )
@@ -188,7 +196,9 @@ fun GymCard(
                     ) {
                         Text(
                             text = stringResource(R.string.distance),
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.Bold
+                            ),
                             color = contentColor,
                             textAlign = TextAlign.Center
                         )
@@ -254,6 +264,10 @@ fun GymCard(
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    ),
                     onClick = {
                         onAction(MatchingScreenAction.OnGymDisliked(gym))
                     }
@@ -261,10 +275,14 @@ fun GymCard(
                     Text(
                         modifier = Modifier.padding(horizontal = 8.dp),
                         text = stringResource(R.string.skip),
-                        color = MaterialTheme.colorScheme.onPrimary
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
                 Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    ),
                     onClick = {
                         onAction(MatchingScreenAction.OnGymLiked(gym))
                     }
@@ -272,7 +290,7 @@ fun GymCard(
                     Text(
                         modifier = Modifier.padding(horizontal = 8.dp),
                         text = stringResource(R.string.like),
-                        color = MaterialTheme.colorScheme.onPrimary
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }
@@ -295,12 +313,12 @@ fun PersonsView(
         Icon(
             imageVector = icon,
             contentDescription = "icon",
-            modifier = Modifier.size(30.dp),
+            modifier = Modifier.size(25.dp),
             tint = contentColor,
         )
         Text(
             text = (number ?: 0).toString(),
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.bodySmall,
             color = contentColor,
             textAlign = TextAlign.Center
         )
@@ -310,26 +328,28 @@ fun PersonsView(
 @Preview
 @Composable
 fun GymCardPreview() {
-    GymCard(
-        gym = Gym(
-            openGymStart = "2016-11-02T17:00:00+00:00",
-            openGymEnd = "2016-11-02T19:00:00+00:00",
-            totalFemales = 2,
-            totalMales = 1,
-            totalNonResidents = 1,
-            totalResidents = 2,
-            total = 3,
-            facilityTitle = "Cary Arts Center",
-            location = "Principals Hall",
-            address = "101 Dry AVE",
-            provinceCode = "NC",
-            postalCode = "27511",
-            passType = "Open Studio Programs",
-            communityCenter = "CAC",
-            openGym = "Open Studio",
-            group = null,
-            distance = null
-        ),
-        onAction = {}
-    )
+    UrbanSportsTheme {
+        GymCard(
+            gym = Gym(
+                openGymStart = "2016-11-02T17:00:00+00:00",
+                openGymEnd = "2016-11-02T19:00:00+00:00",
+                totalFemales = 2,
+                totalMales = 1,
+                totalNonResidents = 1,
+                totalResidents = 2,
+                total = 3,
+                facilityTitle = "Cary Arts Center",
+                location = "Principals Hall",
+                address = "101 Dry AVE",
+                provinceCode = "NC",
+                postalCode = "27511",
+                passType = "Open Studio Programs",
+                communityCenter = "CAC",
+                openGym = "Open Studio",
+                group = null,
+                distance = null
+            ),
+            onAction = {}
+        )
+    }
 }

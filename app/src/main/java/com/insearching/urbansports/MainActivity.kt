@@ -27,7 +27,7 @@ import com.insearching.urbansports.core.presentation.dialog.PermissionDialog
 import com.insearching.urbansports.gyms.presentation.favorite_gyms.FavoritesScreenRoot
 import com.insearching.urbansports.gyms.presentation.gym_match.MatchingScreenRoot
 import com.insearching.urbansports.gyms.presentation.gym_match.MatchingScreenViewModel
-import com.insearching.urbansports.ui.theme.UrbanSportsChallenageTheme
+import com.insearching.urbansports.ui.theme.UrbanSportsTheme
 import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            UrbanSportsChallenageTheme {
+            UrbanSportsTheme {
                 val viewModel = koinViewModel<MainViewModel>()
                 val dialogQueue = viewModel.visiblePermissionDialogQueue
 
