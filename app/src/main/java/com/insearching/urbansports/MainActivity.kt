@@ -60,6 +60,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val navController = rememberNavController()
                     val isPermissionGranted by viewModel.isPermissionsGranted.collectAsState()
+
                     NavHost(
                         navController = navController,
                         startDestination = Screen.GymMatchScreen.route,

@@ -1,6 +1,7 @@
 package com.insearching.urbansports.core.data.networking
 
-import com.insearching.urbansportschallenage.BuildConfig
+import com.insearching.urbansports.BuildConfig
+
 
 fun constructUrl(url: String): String {
     return when {

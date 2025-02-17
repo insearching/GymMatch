@@ -1,6 +1,7 @@
 package com.insearching.urbansports.gyms.data.maps
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Geocoder
@@ -14,6 +15,7 @@ import com.google.android.gms.location.Priority
 import com.insearching.urbansports.core.domain.util.DataError
 import com.insearching.urbansports.core.domain.util.Result
 import com.insearching.urbansports.core.util.LocationUtils
+import com.insearching.urbansports.core.util.LocationUtils.hasLocationPermissions
 import com.insearching.urbansports.gyms.domain.LocationManager
 import com.insearching.urbansports.gyms.domain.model.GeoPoint
 import com.insearching.urbansports.gyms.domain.model.toGeoPoint
@@ -39,7 +41,7 @@ class DefaultLocationManager(
         Constants.LOCATION_UPDATE_SECONDS.seconds.inWholeMilliseconds
     ).build()
 
-
+    @SuppressLint("MissingPermission")
     override suspend fun getCurrentLocation(): Flow<Result<GeoPoint, DataError.Local>> {
         return callbackFlow {
             val locationListener = object : LocationCallback() {
@@ -52,24 +54,20 @@ class DefaultLocationManager(
                     }
                 }
             }
-            if (ActivityCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
+
+            if (context.hasLocationPermissions()) {
                 locationClient.requestLocationUpdates(
                     locationRequest,
                     locationListener,
                     Looper.getMainLooper()
                 )
-            } else {
-                trySend(Result.Error(DataError.Local.PERMISSION_REQUIRED))
             }
             awaitClose {
                 locationClient.removeLocationUpdates(locationListener) // Unregister listener on cancellation
             }
         }
     }
+
 
     override suspend fun getLatLngFromAddress(address: String): GeoPoint? {
         return withContext(Dispatchers.IO) {

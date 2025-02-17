@@ -1,6 +1,10 @@
 package com.insearching.urbansports.core.util
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import android.location.Location
+import androidx.core.app.ActivityCompat
 
 object LocationUtils {
 
@@ -33,5 +37,12 @@ object LocationUtils {
         val results = FloatArray(1)
         Location.distanceBetween(startLat, startLng, endLat, endLng, results)
         return results[0].toDouble()
+    }
+
+    fun Context.hasLocationPermissions(): Boolean {
+        return ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
     }
 }

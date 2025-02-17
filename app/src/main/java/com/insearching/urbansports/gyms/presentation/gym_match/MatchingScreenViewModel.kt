@@ -12,7 +12,7 @@ import com.insearching.urbansports.gyms.domain.usecase.AddGymToFavorites
 import com.insearching.urbansports.gyms.domain.usecase.DislikeGym
 import com.insearching.urbansports.gyms.domain.usecase.FindNearbyGyms
 import com.insearching.urbansports.gyms.domain.usecase.ObserveCurrentLocation
-import com.insearching.urbansportschallenage.R
+import com.insearching.urbansports.R
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -61,15 +61,6 @@ class MatchingScreenViewModel(
                         }
                     }
                 }
-//                .onSuccess {
-//                    searchForGyms(it)
-//                }
-//                .onError { error ->
-//                    _state.update {
-//                        MatchingScreenState.Error(error.toUiText())
-//                    }
-//                }
-
         }
     }
 
@@ -103,11 +94,12 @@ class MatchingScreenViewModel(
         when (action) {
             is MatchingScreenAction.OnGymLiked -> {
                 viewModelScope.launch {
-                    addGymToFavorites(action.gym).onSuccess { hasMatch ->
-                        if (hasMatch) {
-                            _matchChannel.send(Any())
+                    addGymToFavorites(action.gym)
+                        .onSuccess { hasMatch ->
+                            if (hasMatch) {
+                                _matchChannel.send(Any())
+                            }
                         }
-                    }
                         .onError { error ->
                             _state.update {
                                 MatchingScreenState.Error(error.toUiText())

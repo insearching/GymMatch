@@ -1,7 +1,7 @@
 package com.insearching.urbansports.core.presentation.util
 
 import com.insearching.urbansports.core.domain.util.DataError
-import com.insearching.urbansportschallenage.R
+import com.insearching.urbansports.R
 
 fun DataError.toUiText(): UiText {
     val resId = when (this) {

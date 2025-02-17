@@ -11,7 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.insearching.urbansportschallenage.R
+import com.insearching.urbansports.R
 
 @Composable
 fun PermissionDialog(

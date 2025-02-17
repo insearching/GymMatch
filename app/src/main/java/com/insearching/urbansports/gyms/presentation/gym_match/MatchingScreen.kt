@@ -9,12 +9,14 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,7 +25,9 @@ import com.insearching.urbansports.core.presentation.util.UiText
 import com.insearching.urbansports.core.util.ObserveAsEvents
 import com.insearching.urbansports.gyms.domain.model.Gym
 import com.insearching.urbansports.gyms.presentation.gym_match.animation.GymMatchAnimation
-import com.insearching.urbansportschallenage.R
+import com.insearching.urbansports.R
+import com.insearching.urbansports.core.util.LocationUtils
+import com.insearching.urbansports.core.util.LocationUtils.hasLocationPermissions
 import com.spartapps.swipeablecards.state.rememberSwipeableCardsState
 import com.spartapps.swipeablecards.ui.SwipeableCardDirection
 import com.spartapps.swipeablecards.ui.SwipeableCards
@@ -38,6 +42,12 @@ fun MatchingScreenRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var animationVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(isPermissionGranted) {
+        if (isPermissionGranted) {
+            viewModel.onAction(MatchingScreenAction.OnRefreshGyms)
+        }
+    }
 
     ObserveAsEvents(viewModel.matchChannel) {
         animationVisible = true
@@ -129,12 +139,6 @@ fun MatchingScreenContent(
             .padding(16.dp),
         contentAlignment = Alignment.Center,
     ) {
-
-        Text(
-            text = stringResource(R.string.no_more_gyms_nearby),
-            style = MaterialTheme.typography.displayMedium,
-        )
-
         val gyms = remember { state.data }
         val swipeableCardsState = rememberSwipeableCardsState(
             initialCardIndex = 0,

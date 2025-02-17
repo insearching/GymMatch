@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.insearching.urbansportschallenage"
+    namespace = "com.insearching.urbansports"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.insearching.urbansportschallenage"
+        applicationId = "com.insearching.urbansports"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
@@ -89,6 +89,9 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.mockk)
+    androidTestImplementation(libs.junit.jupiter)
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }

@@ -47,7 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.insearching.urbansports.core.util.DateUtils.formatTime
 import com.insearching.urbansports.gyms.domain.model.Gym
-import com.insearching.urbansportschallenage.R
+import com.insearching.urbansports.R
 import java.util.Locale
 
 @Composable
