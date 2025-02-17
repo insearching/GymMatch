@@ -3,7 +3,6 @@ package com.insearching.urbansports.gyms.domain.usecase
 import com.insearching.urbansports.core.domain.util.DataError
 import com.insearching.urbansports.core.domain.util.Result
 import com.insearching.urbansports.core.domain.util.getOrDefault
-import com.insearching.urbansports.core.domain.util.isSucceeded
 import com.insearching.urbansports.core.domain.util.onSuccess
 import com.insearching.urbansports.gyms.domain.LocationManager
 import com.insearching.urbansports.gyms.domain.model.GeoPoint
@@ -27,10 +26,10 @@ class ObserveCurrentLocation(
 
     private var currentLocation: GeoPoint? = null
 
-    suspend operator fun invoke(): Flow<Result<GeoPoint, DataError>> {
+    operator fun invoke(): Flow<Result<GeoPoint, DataError>> {
         return locationManager.getCurrentLocation()
             .filter {
-                !it.isSucceeded() || isLocationChanged(
+                isLocationChanged(
                     oldLocation = currentLocation,
                     newLocation = it.getOrDefault(null)
                 )

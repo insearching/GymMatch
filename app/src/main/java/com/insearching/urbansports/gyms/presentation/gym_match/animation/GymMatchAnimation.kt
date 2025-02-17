@@ -26,7 +26,7 @@ import com.insearching.urbansports.R
 @Composable
 fun GymMatchAnimation(
     isVisible: Boolean,
-    durationMillis: Int = 2000, // Extended to 3 seconds
+    durationMillis: Int = 2000,
     onAnimationEnd: () -> Unit = {}
 ) {
     val scale by animateFloatAsState(
@@ -36,17 +36,17 @@ fun GymMatchAnimation(
     )
 
     val alpha by animateFloatAsState(
-        targetValue = if (isVisible) 0f else 1f, // Fade out while expanding
+        targetValue = if (isVisible) 0f else 1f,
         animationSpec = tween(durationMillis)
     )
 
-    val secondaryColor = MaterialTheme.colorScheme.secondary // Get secondary color for background
+    val secondaryColor = MaterialTheme.colorScheme.secondary
 
     if (isVisible) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.5f)), // Dim background
+                .background(Color.Black.copy(alpha = 0.5f)),
             contentAlignment = Alignment.Center
         ) {
             Box(
@@ -57,16 +57,18 @@ fun GymMatchAnimation(
                         scaleY = scale,
                         alpha = alpha
                     )
-                    .background(secondaryColor, shape = CircleShape), // Use theme's secondary color
+                    .background(secondaryColor, shape = CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = stringResource(R.string.gym_match),
+                    style = MaterialTheme.typography.labelMedium.copy(
+                        fontWeight = FontWeight.W400,
+                        fontSize = 14.sp
+                    ),
                     color = Color.White,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(16.dp) // Added padding for better readability
+                    modifier = Modifier.padding(16.dp)
                 )
             }
         }

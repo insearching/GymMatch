@@ -39,7 +39,7 @@ class DefaultLocationManager(
     ).build()
 
     @SuppressLint("MissingPermission")
-    override suspend fun getCurrentLocation(): Flow<Result<GeoPoint, DataError.Local>> {
+    override fun getCurrentLocation(): Flow<Result<GeoPoint, DataError.Local>> {
         return callbackFlow {
             val locationListener = object : LocationCallback() {
                 override fun onLocationResult(locationResult: LocationResult) {

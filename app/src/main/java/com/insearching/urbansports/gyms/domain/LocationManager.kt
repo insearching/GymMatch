@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface LocationManager {
 
-    suspend fun getCurrentLocation(): Flow<Result<GeoPoint, DataError.Local>>
+    fun getCurrentLocation(): Flow<Result<GeoPoint, DataError.Local>>
 
     suspend fun getLatLngFromAddress(address: String): GeoPoint?
 

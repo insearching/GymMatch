@@ -121,7 +121,7 @@ fun GymCard(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row(
-                    horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+                    horizontalArrangement = Arrangement.spacedBy(24.dp, Alignment.Start),
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -153,7 +153,7 @@ fun GymCard(
                             color = contentColor,
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontWeight = FontWeight.Bold
-                            ),
+                            )
                         )
                         Text(
                             text = gym.group ?: "",
@@ -261,7 +261,8 @@ fun GymCard(
                     .fillMaxWidth()
                     .align(Alignment.BottomCenter)
                     .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceAround
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(32.dp, Alignment.CenterHorizontally)
             ) {
                 Button(
                     colors = ButtonDefaults.buttonColors(
