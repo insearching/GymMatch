@@ -16,18 +16,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.insearching.urbansports.R
 import com.insearching.urbansports.core.presentation.util.UiText
 import com.insearching.urbansports.core.util.ObserveAsEvents
 import com.insearching.urbansports.gyms.domain.model.Gym
 import com.insearching.urbansports.gyms.presentation.gym_match.animation.GymMatchAnimation
-import com.insearching.urbansports.R
-import com.insearching.urbansports.core.util.LocationUtils
-import com.insearching.urbansports.core.util.LocationUtils.hasLocationPermissions
 import com.spartapps.swipeablecards.state.rememberSwipeableCardsState
 import com.spartapps.swipeablecards.ui.SwipeableCardDirection
 import com.spartapps.swipeablecards.ui.SwipeableCards
@@ -71,8 +68,8 @@ fun MatchingScreen(
     state: MatchingScreenState,
     animationVisible: Boolean,
     isPermissionGranted: Boolean,
-    onAction: (MatchingScreenAction) -> Unit,
-    onAnimationEnd: () -> Unit
+    onAction: (MatchingScreenAction) -> Unit = {},
+    onAnimationEnd: () -> Unit = {}
 ) {
     if (!isPermissionGranted) {
         return
@@ -254,9 +251,7 @@ fun MatchingScreenSuccessPreview() {
     MatchingScreen(
         state = state,
         animationVisible = false,
-        isPermissionGranted = true,
-        onAction = {},
-        onAnimationEnd = {}
+        isPermissionGranted = true
     )
 }
 
@@ -267,9 +262,7 @@ fun MatchingScreenLoadingPreview() {
     MatchingScreen(
         state = state,
         animationVisible = false,
-        isPermissionGranted = true,
-        onAction = {},
-        onAnimationEnd = {}
+        isPermissionGranted = true
     )
 }
 
@@ -280,8 +273,6 @@ fun MatchingScreenErrorPreview() {
     MatchingScreen(
         state = state,
         animationVisible = false,
-        isPermissionGranted = true,
-        onAction = {},
-        onAnimationEnd = {}
+        isPermissionGranted = true
     )
 }

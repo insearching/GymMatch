@@ -53,6 +53,16 @@ android {
         buildConfig = true
         compose = true
     }
+
+    // added to be able to run ui tests
+    packaging {
+        resources.excludes.addAll(
+            listOf(
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE-notice.md"
+        )
+        )
+    }
 }
 
 
@@ -91,6 +101,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.mockk)
     androidTestImplementation(libs.junit.jupiter)
+    androidTestImplementation("io.mockk:mockk-android:1.13.5")
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
