@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,6 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import com.insearching.urbansports.core.navigation.Screen
 import com.insearching.urbansports.core.presentation.dialog.CoarseLocationPermissionTextProvider
 import com.insearching.urbansports.core.presentation.dialog.PermissionDialog
+import com.insearching.urbansports.core.util.LocationUtils.hasLocationPermissions
 import com.insearching.urbansports.gyms.presentation.favorite_gyms.FavoritesScreenRoot
 import com.insearching.urbansports.gyms.presentation.gym_match.MatchingScreenRoot
 import com.insearching.urbansports.gyms.presentation.gym_match.MatchingScreenViewModel
@@ -43,16 +43,16 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             UrbanSportsTheme {
-                val viewModel = koinViewModel<MainViewModel>()
                 var showDialog by remember { mutableStateOf(false) }
+                var isPermissionGranted by remember { mutableStateOf(hasLocationPermissions()) }
 
                 val locationPermissionLauncher = rememberLauncherForActivityResult(
                     contract = ActivityResultContracts.RequestPermission(),
                     onResult = { isGranted ->
-                        viewModel.onPermissionResult(
-                            permission = permissionsToRequest,
-                            isGranted = isGranted
-                        )
+                        isPermissionGranted = isGranted
+                        if (isGranted) {
+                            showDialog = false
+                        }
                     }
                 )
 
@@ -62,7 +62,6 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val navController = rememberNavController()
-                    val isPermissionGranted by viewModel.isPermissionsGranted.collectAsState()
 
                     NavHost(
                         navController = navController,
@@ -88,8 +87,12 @@ class MainActivity : ComponentActivity() {
                 if (showDialog)
                     PermissionDialog(
                         permissionTextProvider = CoarseLocationPermissionTextProvider(),
-                        isPermanentlyDeclined = !shouldShowRequestPermissionRationale(permissionsToRequest),
-                        onDismiss = viewModel::dismissDialog,
+                        isPermanentlyDeclined = !shouldShowRequestPermissionRationale(
+                            permissionsToRequest
+                        ),
+                        onDismiss = {
+                            showDialog = false
+                        },
                         onOkClick = {
                             showDialog = false
                             locationPermissionLauncher.launch(permissionsToRequest)

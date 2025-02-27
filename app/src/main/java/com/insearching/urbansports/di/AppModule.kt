@@ -2,7 +2,6 @@ package com.insearching.urbansports.di
 
 import android.location.Geocoder
 import com.google.android.gms.location.LocationServices
-import com.insearching.urbansports.MainViewModel
 import com.insearching.urbansports.core.data.networking.HttpClientFactory
 import com.insearching.urbansports.gyms.data.maps.DefaultLocationManager
 import com.insearching.urbansports.gyms.data.networking.KtorRemoteGymDataSource
@@ -37,6 +36,5 @@ val appModule = module {
     single { DislikeGym(get()) }
     single { FindNearbyGyms(get(), get()) }
 
-    viewModel { MainViewModel() }
     viewModel { MatchingScreenViewModel(get(), get(), get(), get()) }
 }
