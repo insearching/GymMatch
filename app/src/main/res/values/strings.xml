@@ -11,7 +11,7 @@
     <string name="like">Like</string>
     <string name="no_more_gyms_nearby">No more gyms nearby…</string>
     <string name="error_permission_required">Location permission required to find the nearest gym</string>
-    <string name="error_disk_full">Disk is full, please delete some files…</string>
+    <string name="data_error">Failed to write data to database</string>
     <string name="females">%1$s females</string>
     <string name="total">%1$s total</string>
     <string name="males">%1$s males</string>

@@ -5,7 +5,7 @@ import com.insearching.urbansports.R
 
 fun DataError.toUiText(): UiText {
     val resId = when (this) {
-        DataError.Local.DISK_FULL -> R.string.error_disk_full
+        DataError.Local.DATA_ERROR -> R.string.data_error
         DataError.Local.PERMISSION_REQUIRED -> R.string.error_permission_required
         DataError.Local.GPS_DISABLED -> R.string.error_gps_disabled
         DataError.Remote.REQUEST_TIMEOUT -> R.string.error_request_timeout

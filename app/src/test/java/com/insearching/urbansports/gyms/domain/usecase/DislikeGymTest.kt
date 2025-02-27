@@ -82,7 +82,7 @@ class DislikeGymTest {
             isSkipped = false
         )
 
-        val error = DataError.Local.DISK_FULL
+        val error = DataError.Local.DATA_ERROR
         coEvery { gymRepository.updateGym(any()) } returns Result.Error(error)
 
         // When

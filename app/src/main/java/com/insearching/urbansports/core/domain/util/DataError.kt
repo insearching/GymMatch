@@ -11,7 +11,7 @@ sealed interface DataError: Error {
     }
     
     enum class Local: DataError {
-        DISK_FULL,
+        DATA_ERROR,
         PERMISSION_REQUIRED,
         GPS_DISABLED
     }

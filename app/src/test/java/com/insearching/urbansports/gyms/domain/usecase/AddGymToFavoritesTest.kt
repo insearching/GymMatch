@@ -76,13 +76,13 @@ class AddGymToFavoritesTest {
     fun `should return failure when updating gym fails`() = runTest {
         // Given
         val gym = createTestGym()
-        coEvery { gymRepository.updateGym(any()) } returns Error(DataError.Local.DISK_FULL)
+        coEvery { gymRepository.updateGym(any()) } returns Error(DataError.Local.DATA_ERROR)
 
         // When
         val result = addGymToFavorites.invoke(gym)
 
         // Then
-        assertEquals(Error(DataError.Local.DISK_FULL), result)
+        assertEquals(Error(DataError.Local.DATA_ERROR), result)
         coVerify { gymRepository.updateGym(gym.copy(isFavorite = true)) }
     }
 

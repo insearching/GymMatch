@@ -48,7 +48,7 @@ class DefaultGymsRepository(
             gymDao.updateGym(gym.toEntity())
             Result.Success(Unit)
         } catch (ex: SQLiteException) {
-            Result.Error(DataError.Local.DISK_FULL)
+            Result.Error(DataError.Local.DATA_ERROR)
         }
     }
 

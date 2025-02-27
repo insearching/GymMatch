@@ -111,14 +111,14 @@ class DefaultGymsRepositoryTest {
         // Given
         val facilityTitle = "Failing Gym"
         val gym = createTestGym(facilityTitle)
-        coEvery { gymDao.updateGym(any()) } throws SQLiteException("Disk full")
+        coEvery { gymDao.updateGym(any()) } throws SQLiteException("Data error")
 
         // When
         val result = repository.updateGym(gym)
 
         // Then
         assertFalse(result.isSucceeded())
-        assertEquals(DataError.Local.DISK_FULL, result.errorOrNull())
+        assertEquals(DataError.Local.DATA_ERROR, result.errorOrNull())
     }
 
     private fun createTestGym(facilityTitle: String): Gym {
