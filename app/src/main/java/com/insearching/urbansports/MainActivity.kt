@@ -17,6 +17,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -41,7 +44,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             UrbanSportsTheme {
                 val viewModel = koinViewModel<MainViewModel>()
-                val dialogQueue = viewModel.visiblePermissionDialogQueue
+                var showDialog by remember { mutableStateOf(false) }
 
                 val locationPermissionLauncher = rememberLauncherForActivityResult(
                     contract = ActivityResultContracts.RequestPermission(),
@@ -53,7 +56,7 @@ class MainActivity : ComponentActivity() {
                     }
                 )
 
-                LaunchedEffect(viewModel.visiblePermissionDialogQueue.isEmpty()) {
+                LaunchedEffect(showDialog) {
                     locationPermissionLauncher.launch(permissionsToRequest)
                 }
 
@@ -82,28 +85,17 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                dialogQueue
-                    .reversed()
-                    .forEach { permission ->
-                        PermissionDialog(
-                            permissionTextProvider = when (permission) {
-                                Manifest.permission.ACCESS_COARSE_LOCATION -> {
-                                    CoarseLocationPermissionTextProvider()
-                                }
-
-                                else -> return@forEach
-                            },
-                            isPermanentlyDeclined = !shouldShowRequestPermissionRationale(
-                                permission
-                            ),
-                            onDismiss = viewModel::dismissDialog,
-                            onOkClick = {
-                                viewModel.dismissDialog()
-                                locationPermissionLauncher.launch(permissionsToRequest)
-                            },
-                            onGoToAppSettingsClick = ::openAppSettings
-                        )
-                    }
+                if (showDialog)
+                    PermissionDialog(
+                        permissionTextProvider = CoarseLocationPermissionTextProvider(),
+                        isPermanentlyDeclined = !shouldShowRequestPermissionRationale(permissionsToRequest),
+                        onDismiss = viewModel::dismissDialog,
+                        onOkClick = {
+                            showDialog = false
+                            locationPermissionLauncher.launch(permissionsToRequest)
+                        },
+                        onGoToAppSettingsClick = ::openAppSettings
+                    )
             }
         }
     }

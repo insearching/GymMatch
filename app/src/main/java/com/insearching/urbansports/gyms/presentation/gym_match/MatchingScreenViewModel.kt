@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
@@ -28,15 +27,12 @@ import kotlinx.coroutines.launch
 class MatchingScreenViewModel(
     private val addGymToFavorites: AddGymToFavorites,
     private val dislikeGym: DislikeGym,
-    private val observeCurrentLocation: ObserveCurrentLocation,
+    observeCurrentLocation: ObserveCurrentLocation,
     private val findNearbyGyms: FindNearbyGyms
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<MatchingScreenState>(MatchingScreenState.Loading)
     val state = _state
-        .onStart {
-            checkLocation()
-        }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000L),
