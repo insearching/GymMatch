@@ -2,6 +2,7 @@ package com.insearching.urbansports.gyms.presentation.gym_match
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -88,9 +90,14 @@ fun GymCard(
                         edgeTreatment = BlurredEdgeTreatment(MaterialTheme.shapes.medium)
                     )
             )
+
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
+                    .align(Alignment.Center)
+                    .padding(horizontal = 24.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(Color.White.copy(alpha = 0.3f))
                     .padding(24.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
                 horizontalAlignment = Alignment.Start
@@ -328,8 +335,37 @@ fun PersonsView(
 
 @Preview
 @Composable
-fun GymCardPreview() {
-    UrbanSportsTheme {
+fun GymCardPreviewDarkTheme() {
+    UrbanSportsTheme(darkTheme = true) {
+        GymCard(
+            gym = Gym(
+                openGymStart = "2016-11-02T17:00:00+00:00",
+                openGymEnd = "2016-11-02T19:00:00+00:00",
+                totalFemales = 2,
+                totalMales = 1,
+                totalNonResidents = 1,
+                totalResidents = 2,
+                total = 3,
+                facilityTitle = "Cary Arts Center",
+                location = "Principals Hall",
+                address = "101 Dry AVE",
+                provinceCode = "NC",
+                postalCode = "27511",
+                passType = "Open Studio Programs",
+                communityCenter = "CAC",
+                openGym = "Open Studio",
+                group = null,
+                distance = null
+            ),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun GymCardPreviewLightTheme() {
+    UrbanSportsTheme(darkTheme = false) {
         GymCard(
             gym = Gym(
                 openGymStart = "2016-11-02T17:00:00+00:00",
