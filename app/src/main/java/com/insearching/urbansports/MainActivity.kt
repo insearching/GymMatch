@@ -2,6 +2,7 @@ package com.insearching.urbansports
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -20,13 +21,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.insearching.urbansports.core.navigation.Screen
 import com.insearching.urbansports.core.presentation.dialog.CoarseLocationPermissionTextProvider
+import com.insearching.urbansports.core.presentation.dialog.GpsPermissionTextProvider
 import com.insearching.urbansports.core.presentation.dialog.PermissionDialog
 import com.insearching.urbansports.core.util.LocationUtils.hasLocationPermissions
+import com.insearching.urbansports.core.util.LocationUtils.isGpsEnabled
 import com.insearching.urbansports.gyms.presentation.favorite_gyms.FavoritesScreenRoot
 import com.insearching.urbansports.gyms.presentation.gym_match.MatchingScreenRoot
 import com.insearching.urbansports.gyms.presentation.gym_match.MatchingScreenViewModel
@@ -43,20 +47,33 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             UrbanSportsTheme {
-                var showDialog by remember { mutableStateOf(false) }
+                var showGpsDialog by remember { mutableStateOf(false) }
+                var showPermissionDialog by remember { mutableStateOf(false) }
+
+                var isGpsEnabled by remember { mutableStateOf(isGpsEnabled()) }
                 var isPermissionGranted by remember { mutableStateOf(hasLocationPermissions()) }
+
+                val gpsSettingsLauncher = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.StartActivityForResult()
+                ) {
+                    isGpsEnabled = isGpsEnabled()
+                }
 
                 val locationPermissionLauncher = rememberLauncherForActivityResult(
                     contract = ActivityResultContracts.RequestPermission(),
                     onResult = { isGranted ->
                         isPermissionGranted = isGranted
                         if (isGranted) {
-                            showDialog = false
+                            showPermissionDialog = false
                         }
                     }
                 )
 
-                LaunchedEffect(showDialog) {
+                LaunchedEffect(isGpsEnabled) {
+                    showGpsDialog = !isGpsEnabled
+                }
+
+                LaunchedEffect(showPermissionDialog) {
                     locationPermissionLauncher.launch(permissionsToRequest)
                 }
 
@@ -73,7 +90,8 @@ class MainActivity : ComponentActivity() {
                         ) {
                             MatchingScreenRoot(
                                 viewModel = koinViewModel<MatchingScreenViewModel>(),
-                                isPermissionGranted = isPermissionGranted
+                                isGpsEnabled = isGpsEnabled,
+                                isPermissionGranted = isPermissionGranted,
                             )
                         }
                         composable(
@@ -84,21 +102,31 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                if (showDialog)
+                if (showGpsDialog) {
+                    PermissionDialog(
+                        permissionTextProvider = GpsPermissionTextProvider(),
+                        isPermanentlyDeclined = !shouldShowRequestPermissionRationale(
+                            permissionsToRequest
+                        ),
+                        onDismiss = {
+                            showPermissionDialog = false
+                        },
+                        onGoToAppSettingsClick = {
+                            gpsSettingsLauncher.launch(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                        }
+                    )
+                }
+
+                if (showPermissionDialog) {
                     PermissionDialog(
                         permissionTextProvider = CoarseLocationPermissionTextProvider(),
                         isPermanentlyDeclined = !shouldShowRequestPermissionRationale(
                             permissionsToRequest
                         ),
-                        onDismiss = {
-                            showDialog = false
-                        },
-                        onOkClick = {
-                            showDialog = false
-                            locationPermissionLauncher.launch(permissionsToRequest)
-                        },
+                        onDismiss = { showPermissionDialog = false },
                         onGoToAppSettingsClick = ::openAppSettings
                     )
+                }
             }
         }
     }
@@ -109,4 +137,10 @@ fun Activity.openAppSettings() {
         Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
         Uri.fromParts("package", packageName, null)
     ).also(::startActivity)
+}
+
+
+fun Context.openGpsSettings() {
+    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+    startActivity(intent)
 }

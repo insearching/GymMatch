@@ -18,7 +18,6 @@ fun PermissionDialog(
     permissionTextProvider: PermissionTextProvider,
     isPermanentlyDeclined: Boolean,
     onDismiss: () -> Unit,
-    onOkClick: () -> Unit,
     onGoToAppSettingsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -70,5 +69,11 @@ class CoarseLocationPermissionTextProvider : PermissionTextProvider {
             "This app needs phone location permission so that we can " +
                     "find the nearest gym to you."
         }
+    }
+}
+
+class GpsPermissionTextProvider : PermissionTextProvider {
+    override fun getDescription(isPermanentlyDeclined: Boolean): String {
+        return "GPS is disabled. You can go to the app settings to grant it."
     }
 }

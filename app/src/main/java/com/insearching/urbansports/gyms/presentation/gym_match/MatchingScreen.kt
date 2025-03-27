@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -38,13 +40,14 @@ import org.koin.androidx.compose.koinViewModel
 fun MatchingScreenRoot(
     modifier: Modifier = Modifier,
     viewModel: MatchingScreenViewModel = koinViewModel(),
-    isPermissionGranted: Boolean
+    isGpsEnabled: Boolean,
+    isPermissionGranted: Boolean,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var animationVisible by remember { mutableStateOf(false) }
 
-    LaunchedEffect(isPermissionGranted) {
-        if (isPermissionGranted) {
+    LaunchedEffect(isPermissionGranted, isGpsEnabled) {
+        if (isPermissionGranted && isGpsEnabled) {
             viewModel.onAction(MatchingScreenAction.OnRefreshGyms)
         }
     }
@@ -214,14 +217,30 @@ fun MatchingScreenError(
     onAction: (MatchingScreenAction) -> Unit
 ) {
     Box(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
         contentAlignment = Alignment.Center,
     ) {
-        Text(
-            modifier = modifier,
-            text = state.message.asString(),
-            style = MaterialTheme.typography.displayMedium,
-        )
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text(
+                modifier = modifier,
+                text = state.message.asString(),
+                style = MaterialTheme.typography.displayMedium,
+                textAlign = TextAlign.Center
+            )
+
+            Button(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                onClick = {
+                    onAction(MatchingScreenAction.OnRefreshGyms)
+                })
+            {
+                Text(text = stringResource(R.string.retry))
+            }
+        }
     }
 }
 

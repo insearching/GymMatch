@@ -8,6 +8,7 @@ fun DataError.toUiText(): UiText {
         DataError.Local.DATA_ERROR -> R.string.data_error
         DataError.Local.PERMISSION_REQUIRED -> R.string.error_permission_required
         DataError.Local.GPS_DISABLED -> R.string.error_gps_disabled
+        DataError.Local.NO_LOCATION_FOUND -> R.string.error_no_location_found
         DataError.Remote.REQUEST_TIMEOUT -> R.string.error_request_timeout
         DataError.Remote.TOO_MANY_REQUESTS -> R.string.error_too_many_requests
         DataError.Remote.NO_INTERNET -> R.string.error_no_internet
